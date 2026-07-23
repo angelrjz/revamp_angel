@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Centro Ops">
+<meta name="theme-color" content="#15181a">
+<title>Centro de Operaciones</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#15181a;--surface:#1f2325;--line:#33393b;--text:#eeece6;--muted:#8d9391;--accent:#4fa389;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif;padding:0;}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;}
+.wrap{max-width:940px;margin:0 auto;padding:16px;}
+header{border-bottom:1px solid var(--line);padding:16px 0;margin-bottom:16px;}
+header h1{margin:0;font-size:24px;}
+nav{display:flex;gap:16px;border-bottom:1px solid var(--line);margin-bottom:16px;}
+nav button{background:0;border:0;color:var(--muted);font-weight:700;padding:10px 0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;}
+nav button.active{color:var(--text);border-bottom-color:var(--accent);}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:12px;}
+.card h3{margin:0 0 12px;font-size:13px;color:var(--muted);text-transform:uppercase;}
+.fuel-row{display:flex;justify-content:space-between;margin-bottom:8px;}
+.fuel-val{font-weight:700;font-family:monospace;}
+.fuel-bar{height:6px;background:var(--surface);border-radius:3px;overflow:hidden;}
+.fuel-fill{height:100%;background:var(--accent);width:50%;}
+select,input{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:8px;font-family:Inter,sans-serif;width:100%;margin-bottom:8px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:600px){.grid2{grid-template-columns:1fr;}}
+.daybtns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.daybtns button{background:var(--surface);border:1px solid var(--line);color:var(--text);padding:6px 12px;border-radius:16px;font-size:12px;cursor:pointer;}
+.daybtns button.sel{background:var(--accent);border-color:var(--accent);}
+.exrow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.exrow input[type=checkbox]{width:16px;height:16px;cursor:pointer;}
+.exname{flex:1;font-size:13px;}
+.exname small{color:var(--muted);display:block;font-size:11px;}
+.wtinput{width:50px;text-align:center;}
+.stepper{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.stepper button{background:var(--surface);border:1px solid var(--line);color:var(--text);width:28px;height:28px;border-radius:6px;cursor:pointer;font-weight:700;}
+.stepper .val{font-weight:700;font-family:monospace;min-width:60px;}
+.chk{display:flex;align-items:center;gap:8px;margin:8px 0;}
+.chk input{width:16px;height:16px;cursor:pointer;}
+.recipe{border-bottom:1px solid var(--line);padding:12px 0;}
+.recipe .rn{font-weight:600;font-size:13px;}
+.recipe .rm{font-size:11px;color:var(--muted);font-family:monospace;}
+.recipe .rp{font-size:11px;color:var(--text);margin-top:4px;}
+.recipe .rw{font-size:11px;color:var(--accent);margin-top:4px;}
+.routineblock{margin-bottom:16px;}
+.routineblock h4{margin:0 0 8px;font-size:12px;color:var(--accent);text-transform:uppercase;}
+.routineblock table{width:100%;font-size:12px;}
+.routineblock td{padding:6px 0;border-bottom:1px solid var(--line);}
+.savebar{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--line);padding:8px 16px;font-size:12px;color:var(--muted);}
+.savebar.ok{color:var(--accent);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Centro de Operaciones</h1>
+<div style="font-size:12px;color:var(--muted);margin-top:4px;">Ángel Ruiz · 22 jul → 15 ago</div>
+</header>
+
+<nav>
+<button class="active" data-tab="hoy">HOY</button>
+<button data-tab="recetario">RECETARIO</button>
+<button data-tab="rutina">RUTINA</button>
+<button data-tab="semana">SEMANA</button>
+</nav>
+
+<div id="tab-hoy" class="tab-content active">
+
+<div class="card">
+<h3>Balance</h3>
+<div class="fuel-row"><span>Calorías</span><span class="fuel-val" id="kcalval">0/1610</span></div>
+<div class="fuel-bar"><div class="fuel-fill"></div></div>
+<div class="fuel-row" style="margin-top:8px;"><span>Proteína</span><span class="fuel-val" id="protval">0/125g</span></div>
+<div class="fuel-bar"><div class="fuel-fill"></div></div>
+</div>
+
+<div class="card">
+<h3>Comidas</h3>
+<div class="grid2">
+<label><span style="font-size:11px;color:var(--muted);">Desayuno</span><select id="sel-desayuno"></select><span style="font-size:11px;color:var(--muted);display:block;" id="mm-d"></span></label>
+<label><span style="font-size:11px;color:var(--muted);">Comida</span><select id="sel-comida"></select><span style="font-size:11px;color:var(--muted);display:block;" id="mm-c"></span></label>
+<label><span style="font-size:11px;color:var(--muted);">Cena</span><select id="sel-cena"></select><span style="font-size:11px;color:var(--muted);display:block;" id="mm-ce"></span></label>
+<label><span style="font-size:11px;color:var(--muted);">Snack</span><select id="sel-snack"></select><span style="font-size:11px;color:var(--muted);display:block;" id="mm-s"></span></label>
+</div>
+</div>
+
+<div class="card">
+<h3>Entrenamiento</h3>
+<div class="daybtns" id="daybtns"></div>
+<div id="exlist"></div>
+</div>
+
+<div class="card">
+<h3>Hidratación</h3>
+<div class="stepper"><button id="agua-minus">−</button><span class="val" id="agua-val">0.0L</span><button id="agua-plus">+</button><span style="font-size:12px;color:var(--muted);">meta: 3.5L</span></div>
+<div class="fuel-bar"><div class="fuel-fill"></div></div>
+</div>
+
+<div class="card">
+<h3>Sueño</h3>
+<div class="stepper"><button id="sueno-minus">−</button><span class="val" id="sueno-val">0.0h</span><button id="sueno-plus">+</button><span style="font-size:12px;color:var(--muted);">meta: 7-8h</span></div>
+<div class="fuel-bar"><div class="fuel-fill"></div></div>
+</div>
+
+<div class="card">
+<h3>Recordatorios</h3>
+<div class="chk"><input type="checkbox" id="chk-m"><label for="chk-m">Movilidad</label></div>
+<label><span style="font-size:11px;color:var(--muted);">Notas</span><input type="text" id="notas" placeholder="energía, hambre..."></label>
+</div>
+
+</div>
+
+<div id="tab-recetario" class="tab-content">
+<div class="card">
+<h3>Desayunos</h3>
+<div id="rece-d"></div>
+</div>
+<div class="card">
+<h3>Comidas</h3>
+<div id="rece-c"></div>
+</div>
+<div class="card">
+<h3>Cenas</h3>
+<div id="rece-ce"></div>
+</div>
+<div class="card">
+<h3>Snacks</h3>
+<div id="rece-s"></div>
+</div>
+</div>
+
+<div id="tab-rutina" class="tab-content">
+<div class="card">
+<div id="rutina-content"></div>
+</div>
+</div>
+
+<div id="tab-semana" class="tab-content">
+<div class="card">
+<h3>Últimos 7 días</h3>
+<div id="semana-content"></div>
+</div>
+</div>
+
+</div>
+
+<div class="savebar" id="savebar">Datos guardados</div>
+
+<script>
+const DB={desayuno:[{n:"Executive Breakfast",k:525,p:43},{n:"Tiramisú Overnight Oats",k:395,p:35},{n:"Banana Power Oats",k:430,p:35},{n:"Chilaquiles Performance",k:500,p:46},{n:"Pita Fit",k:470,p:42},{n:"Egg Sandwich Deluxe",k:485,p:40},{n:"Salmas Protein",k:455,p:40},{n:"Dio's Special",k:510,p:44}],comida:[{n:"Chicken Classic",k:457,p:30},{n:"Tostadas Tinga",k:468,p:37},{n:"Performance Panini",k:513,p:37},{n:"Tacos Bistec",k:450,p:29},{n:"Fish Day",k:400,p:29},{n:"Steak Bowl",k:450,p:29},{n:"Fajitas Fit",k:445,p:30},{n:"Protein Pasta",k:450,p:29}],cena:[{n:"Night Recovery",k:457,p:31},{n:"Quesadillas",k:445,p:29},{n:"Cheese Garden",k:443,p:35},{n:"Tuna Avocado",k:400,p:29},{n:"Omelette",k:415,p:27},{n:"Yogurt Salad",k:400,p:30},{n:"Fit Cakes",k:470,p:29},{n:"Classic Sandwich",k:513,p:30}],snack:[{n:"—",k:0,p:0},{n:"Apple Crunch",k:190,p:12},{n:"Nut Mix",k:140,p:8},{n:"Yogurt Berries",k:165,p:17},{n:"Cheese Crackers",k:175,p:13},{n:"Veggie Crunch",k:150,p:12},{n:"Delicia Maria",k:240,p:6},{n:"Cappuccino Protein",k:240,p:23},{n:"Berry Shake",k:210,p:22},{n:"Vainilla Latte",k:220,p:20},{n:"Hibiscus",k:40,p:0},{n:"Chocolate",k:190,p:20}]};
+const ROUTINE={"Lower A":[["Sentadilla smith","3x8-10"],["Hip thrust","4x8-10"],["Femoral sentado","4x8-10"],["Ext. rodilla","3x8"],["Femoral acostado","3x8"],["Abductores","3x8"],["Crunch","3x10-12"],["Crunch inverso","3x10-12"]],"Upper A":[["Press pecho","3x6-8"],["Ext. tríceps","3x6-8"],["Press militar","3x6-8"],["Cruce poleas","3x10-12"],["Press francés","3x10-12"],["Laterales","2x12-14"],["Crunch","3x10-12"],["Crunch inverso","3x10-12"]],"Lower B":[["Sentadilla fuerza","2x3-4"],["Sentadilla goblet","3x10-12"],["Salto explosivo","3x fallo"],["Hip thrust","4x8-10"],["Ext. rodilla","2x8+8"],["Femoral acostado","2x8+8"],["Ext. pantorrilla","3x10+10"]],"Upper B":[["Press pecho","3x6-8"],["Ext. tríceps","3x6-8"],["Press militar","3x6-8"],["Cruce poleas","3x10-12"],["Press francés","3x10-12"],["Laterales","2x12-14"],["Crunch","3x10-12"],["Crunch inverso","3x10-12"]],"Descanso":[]};
+let state={d:0,c:0,ce:0,s:0,train:"Lower A",ex:{},agua:0,sueno:0,m:false,n:""};
+function today(){return new Date().toISOString().slice(0,10);}
+function sel(id,arr){document.getElementById(id).innerHTML=arr.map((r,i)=>`<option value="${i}">${r.n}</option>`).join("");}
+sel("sel-desayuno",DB.desayuno);sel("sel-comida",DB.comida);sel("sel-cena",DB.cena);sel("sel-snack",DB.snack);
+function tot(){let k=DB.desayuno[state.d].k+DB.comida[state.c].k+DB.cena[state.ce].k+DB.snack[state.s].k;let p=DB.desayuno[state.d].p+DB.comida[state.c].p+DB.cena[state.ce].p+DB.snack[state.s].p;document.getElementById("kcalval").textContent=k+"/1610";document.getElementById("protval").textContent=p+"/125g";}
+["d","c","ce","s"].forEach(k=>{document.getElementById("sel-"+(k==="d"?"desayuno":k==="c"?"comida":k==="ce"?"cena":"snack")).addEventListener("change",e=>{state[k]=parseInt(e.target.value);tot();save();});});
+function renderDays(){let h="";Object.keys(ROUTINE).forEach(d=>{h+=`<button data-d="${d}" class="${d===state.train?"sel":""}">${d}</button>`;});document.getElementById("daybtns").innerHTML=h;document.querySelectorAll(".daybtns button").forEach(b=>{b.addEventListener("click",()=>{state.train=b.dataset.d;renderExs();save();});});renderExs();}
+function renderExs(){let list=ROUTINE[state.train];let h="";if(list.length){h=list.map((ex,i)=>{let key=state.train+"|"+i;let st=state.ex[key]||{d:false,kg:"",lb:""};return `<div class="exrow ${st.d?"done":""}"><input type="checkbox" ${st.d?"checked":""}><div class="exname">${ex[0]}<small>${ex[1]}</small></div><input type="number" class="wtinput kg" placeholder="kg" value="${st.kg}"><span>kg</span></div>`;}).join("");}document.getElementById("exlist").innerHTML=h;document.querySelectorAll(".exrow input").forEach((inp,i)=>{let row=inp.parentElement;let key=state.train+"|"+Math.floor(i/3);if(!state.ex[key])state.ex[key]={d:false,kg:"",lb:""};if(inp.type==="checkbox"){inp.addEventListener("change",()=>{state.ex[key].d=inp.checked;row.classList.toggle("done");save();});}else{inp.addEventListener("input",()=>{state.ex[key].kg=inp.value;save();});}});}
+document.getElementById("agua-plus").addEventListener("click",()=>{state.agua=Math.min(6,state.agua+0.25);document.getElementById("agua-val").textContent=state.agua.toFixed(2)+"L";save();});
+document.getElementById("agua-minus").addEventListener("click",()=>{state.agua=Math.max(0,state.agua-0.25);document.getElementById("agua-val").textContent=state.agua.toFixed(2)+"L";save();});
+document.getElementById("sueno-plus").addEventListener("click",()=>{state.sueno=Math.min(12,state.sueno+0.5);document.getElementById("sueno-val").textContent=state.sueno.toFixed(1)+"h";save();});
+document.getElementById("sueno-minus").addEventListener("click",()=>{state.sueno=Math.max(0,state.sueno-0.5);document.getElementById("sueno-val").textContent=state.sueno.toFixed(1)+"h";save();});
+document.getElementById("chk-m").addEventListener("change",e=>{state.m=e.target.checked;save();});
+document.getElementById("notas").addEventListener("input",e=>{state.n=e.target.value;save();});
+function save(){let t=today();localStorage.setItem("day:"+t,JSON.stringify(state));document.getElementById("savebar").classList.add("ok");setTimeout(()=>document.getElementById("savebar").classList.remove("ok"),2000);}
+function load(){let saved=localStorage.getItem("day:"+today());if(saved)state=Object.assign(state,JSON.parse(saved));document.getElementById("sel-desayuno").value=state.d;document.getElementById("sel-comida").value=state.c;document.getElementById("sel-cena").value=state.ce;document.getElementById("sel-snack").value=state.s;document.getElementById("chk-m").checked=state.m;document.getElementById("notas").value=state.n;document.getElementById("agua-val").textContent=state.agua.toFixed(2)+"L";document.getElementById("sueno-val").textContent=state.sueno.toFixed(1)+"h";tot();renderDays();}
+function buildRece(){let show=(arr,id)=>{let h="";arr.forEach(r=>{h+=`<div class="recipe"><div class="rn">${r.n}</div><div class="rm">${r.k}kcal · ${r.p}g prot</div></div>`;});document.getElementById(id).innerHTML=h;};show(DB.desayuno,"rece-d");show(DB.comida,"rece-c");show(DB.cena,"rece-ce");show(DB.snack,"rece-s");}
+function buildRutina(){let h="";Object.entries(ROUTINE).forEach(([d,list])=>{if(list.length){h+=`<div class="routineblock"><h4>${d}</h4><table>`;list.forEach(ex=>{h+=`<tr><td>${ex[0]}</td><td>${ex[1]}</td></tr>`;});h+="</table></div>";}});document.getElementById("rutina-content").innerHTML=h;}
+function buildSemana(){let h="";for(let i=6;i>=0;i--){let d=new Date(Date.now()-i*86400000);let k="day:"+d.toISOString().slice(0,10);let s=localStorage.getItem(k);if(s){let data=JSON.parse(s);let tot=DB.desayuno[data.d].k+DB.comida[data.c].k+DB.cena[data.ce].k+DB.snack[data.s].k;h+=`<div style="border-bottom:1px solid var(--line);padding:8px 0;"><strong>${d.toLocaleDateString('es',{weekday:'short',day:'numeric'})}</strong> ${tot}kcal · ${data.train}</div>`;}else h+=`<div style="padding:8px 0;color:var(--muted);">sin registro</div>`;}document.getElementById("semana-content").innerHTML=h;}
+document.querySelectorAll("nav button").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab-content").forEach(x=>x.classList.remove("active"));b.classList.add("active");let tab=b.dataset.tab;document.getElementById("tab-"+tab).classList.add("active");if(tab==="recetario")buildRece();if(tab==="rutina")buildRutina();if(tab==="semana")buildSemana();});});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('service-worker.js');
+load();
+</script>
+</body>
+</html>
