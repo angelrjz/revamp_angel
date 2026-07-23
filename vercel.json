@@ -1,0 +1,5 @@
+{
+  "buildCommand": "echo 'Static PWA - no build needed'",
+  "framework": "static",
+  "public": true
+}

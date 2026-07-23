@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111814">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <title>Transformación 2026</title>
+  <style>
+    :root{--bg:#f3f1eb;--card:#fff;--ink:#172019;--muted:#6d766f;--line:#dfe3dd;--green:#1e6a43;--lime:#d9f05a;--orange:#e59a3c;--red:#cf594e}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit}.app{max-width:760px;margin:auto;padding:env(safe-area-inset-top) 16px calc(90px + env(safe-area-inset-bottom))}
+    header{padding:22px 4px 12px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--green)}h1{font-size:28px;margin:5px 0}.sub{color:var(--muted);font-size:13px}
+    .tabs{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);display:flex;justify-content:center;gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+    .tab{border:0;background:transparent;padding:9px 12px;border-radius:14px;color:var(--muted);font-size:11px;font-weight:800}.tab.active{background:var(--ink);color:white}
+    .page{display:none}.page.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px;margin:12px 0;box-shadow:0 8px 24px rgba(20,35,24,.04)}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}.wrap{flex-wrap:wrap}h2{font-size:17px;margin:0 0 12px}h3{font-size:14px;margin:0}.muted{color:var(--muted);font-size:12px}.big{font-size:24px;font-weight:850}.pill{padding:5px 9px;border-radius:999px;background:#eef2ed;font-size:11px;font-weight:800}.pill.green{background:#e0f3e6;color:var(--green)}.pill.orange{background:#fff0dc;color:#935914}.pill.red{background:#fde4e1;color:#9f332b}
+    .progress{height:9px;background:#e9ece7;border-radius:9px;overflow:hidden;margin:8px 0}.progress span{display:block;height:100%;background:var(--green);border-radius:9px}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.metric{padding:13px;background:#f6f7f3;border-radius:15px}.metric b{display:block;font-size:19px}.metric small{color:var(--muted)}
+    label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin:9px 0 4px}input,select,textarea{width:100%;border:1px solid var(--line);background:white;border-radius:12px;padding:11px;color:var(--ink)}textarea{min-height:78px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .btn{border:0;border-radius:13px;padding:11px 14px;font-weight:800;background:var(--ink);color:white}.btn.alt{background:#edf0eb;color:var(--ink)}.btn.danger{background:#fde4e1;color:#9f332b}.btn:active{transform:scale(.98)}
+    .meal,.exercise{border-top:1px solid var(--line);padding:13px 0}.meal:first-of-type,.exercise:first-of-type{border-top:0}.ingredients{font-size:12px;color:var(--muted);margin:6px 0;line-height:1.5}.status{width:auto;padding:7px 9px;font-size:11px}.series{display:grid;grid-template-columns:28px 1fr 1fr 1fr;gap:6px;align-items:center;margin-top:7px}.series input{padding:8px}.series small{text-align:center}.score{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.score button{border:1px solid var(--line);background:white;border-radius:10px;padding:9px 0}.score button.on{background:var(--green);color:white;border-color:var(--green)}
+    .chart{display:flex;align-items:flex-end;height:130px;gap:6px;padding-top:12px}.bar{flex:1;background:var(--green);border-radius:6px 6px 2px 2px;min-height:3px;position:relative}.bar span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--muted)}
+    .empty{text-align:center;color:var(--muted);padding:20px;font-size:13px}.notice{padding:12px;border-left:4px solid var(--orange);background:#fff7e9;border-radius:10px;font-size:12px;line-height:1.5}.check{width:20px;height:20px;accent-color:var(--green)}@media(min-width:600px){.metrics{grid-template-columns:repeat(4,1fr)}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header><div class="eyebrow">TRANSFORMACIÓN FÍSICA 2026</div><h1 id="hello">Centro de operaciones</h1><div class="sub" id="todayLabel"></div></header>
+
+  <main id="today" class="page active">
+    <div class="card">
+      <div class="row"><h2>Balance de hoy</h2><span id="kcalPill" class="pill">Pendiente</span></div>
+      <div class="metrics">
+        <div class="metric"><b id="kcalNow">0</b><small>de 1,610 kcal</small></div>
+        <div class="metric"><b id="proteinNow">0 g</b><small>de 120–130 g</small></div>
+        <div class="metric"><b id="waterNow">0 L</b><small>agua</small></div>
+        <div class="metric"><b id="stepsNow">0</b><small>pasos</small></div>
+      </div>
+      <div class="progress"><span id="kcalBar" style="width:0"></span></div>
+      <div class="muted" id="remaining"></div>
+    </div>
+    <div class="card"><div class="row"><h2>Comidas</h2><button class="btn alt" onclick="addMeal()">+ Agregar</button></div><div id="meals"></div></div>
+    <div class="card">
+      <h2>Actividad y recuperación</h2>
+      <div class="grid2"><div><label>Pasos</label><input id="steps" type="number" inputmode="numeric"></div><div><label>Agua (L)</label><input id="water" type="number" step=".25" inputmode="decimal"></div></div>
+      <div class="grid2"><div><label>Sueño (horas)</label><input id="sleep" type="number" step=".25"></div><div><label>Movilidad (min)</label><input id="mobility" type="number"></div></div>
+      <label><input class="check" id="workoutDone" type="checkbox" style="width:auto;vertical-align:middle"> Entrenamiento completado</label>
+      <button class="btn" style="margin-top:12px;width:100%" onclick="saveToday()">Guardar día</button>
+    </div>
+    <div class="card">
+      <h2>Cierre del día</h2>
+      <div id="scores"></div>
+      <label>Adherencia alimentaria (%)</label><input id="adherence" type="number" min="0" max="100">
+      <label>Comentario breve</label><textarea id="notes" placeholder="Hambre, antojos, rendimiento o algo que ajustar mañana…"></textarea>
+      <button class="btn" style="margin-top:12px;width:100%" onclick="saveToday()">Guardar cierre</button>
+    </div>
+  </main>
+
+  <main id="progressPage" class="page">
+    <div class="card">
+      <h2>Nueva medición</h2>
+      <div class="grid2"><div><label>Peso (kg)</label><input id="weight" type="number" step=".1"></div><div><label>Cintura (cm)</label><input id="waist" type="number" step=".1"></div></div>
+      <div class="grid2"><div><label>Grasa (%)</label><input id="fat" type="number" step=".1"></div><div><label>Masa magra (kg)</label><input id="lean" type="number" step=".1"></div></div>
+      <label>Fecha</label><input id="measureDate" type="date">
+      <button class="btn" style="margin-top:12px;width:100%" onclick="saveMeasure()">Guardar medición</button>
+    </div>
+    <div class="card"><div class="row"><h2>Tendencia de peso</h2><span class="pill green" id="avgWeight">Sin datos</span></div><div id="weightChart" class="chart"></div></div>
+    <div class="card"><h2>Historial</h2><div id="measureHistory"></div></div>
+  </main>
+
+  <main id="trainingPage" class="page">
+    <div class="card">
+      <div class="row"><div><h2>Entrenamiento</h2><div class="muted">Registra peso, repeticiones y RIR por serie.</div></div><select id="routine" class="status" onchange="renderWorkout()"><option>Lower A</option><option>Upper A</option><option>Lower B</option><option>Upper B</option></select></div>
+      <div id="workout"></div>
+      <button class="btn" style="width:100%;margin-top:10px" onclick="saveWorkout()">Guardar sesión</button>
+    </div>
+    <div class="card"><h2>Últimas sesiones</h2><div id="workoutHistory"></div></div>
+  </main>
+
+  <main id="weekPage" class="page">
+    <div class="card"><div class="row"><h2>Resumen de 7 días</h2><span class="pill" id="weekDates"></span></div><div class="metrics" id="weekMetrics"></div></div>
+    <div class="card"><h2>Lectura semanal</h2><div id="weekAdvice" class="notice"></div></div>
+    <div class="card">
+      <h2>Respaldo de datos</h2><p class="muted">Tus datos siguen en este dispositivo. Descarga un respaldo cada semana.</p>
+      <div class="row wrap"><button class="btn" onclick="exportData()">Descargar respaldo</button><button class="btn alt" onclick="document.getElementById('importFile').click()">Importar</button><input id="importFile" hidden type="file" accept=".json" onchange="importData(event)"></div>
+      <div class="muted" id="backupStatus" style="margin-top:10px"></div>
+    </div>
+  </main>
+</div>
+
+<nav class="tabs">
+  <button class="tab active" data-page="today">HOY</button>
+  <button class="tab" data-page="progressPage">PROGRESO</button>
+  <button class="tab" data-page="trainingPage">ENTRENO</button>
+  <button class="tab" data-page="weekPage">SEMANA</button>
+</nav>
+
+<script>
+const KEY='transformacion2026_v2', GOAL=1610, P_MIN=120, P_MAX=130;
+const baseMeals=[
+ {name:'Desayuno sencillo',ingredients:'2 huevos + 150 g claras · 2 panes integrales · 40 g aguacate',kcal:430,protein:36,status:'pending'},
+ {name:'Pollo, papa y verduras',ingredients:'150 g pollo · 250 g papa · verduras · 10 g aceite de oliva',kcal:525,protein:49,status:'pending'},
+ {name:'Cena de cottage',ingredients:'200 g cottage · 3 tortillas · ensalada · 50 g aguacate',kcal:410,protein:31,status:'pending'},
+ {name:'Snack de yogurt',ingredients:'170 g yogurt griego · 100 g frutos rojos · 15 g crema de cacahuate',kcal:245,protein:19,status:'pending'}
+];
+const routineDefs={
+ 'Lower A':['Sentadilla Smith','Hip thrust','Femoral sentado','Extensión de rodilla','Abductores'],
+ 'Upper A':['Press de pecho','Jalón al pecho','Press militar','Remo sentado','Elevaciones laterales','Tríceps'],
+ 'Lower B':['Peso muerto rumano','Prensa','Curl femoral','Extensión de rodilla','Pantorrilla'],
+ 'Upper B':['Press inclinado','Remo con pecho apoyado','Jalón neutro','Cruces en polea','Curl bíceps','Tríceps francés']
+};
+let db=load(), selectedScores={energy:0,hunger:0,stress:0,recovery:0};
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));return x&&x.version===2?x:{version:2,days:{},measures:[],workouts:[],lastBackup:null}}catch(e){return{version:2,days:{},measures:[],workouts:[],lastBackup:null}}}
+function persist(){localStorage.setItem(KEY,JSON.stringify(db))}
+function localDate(d=new Date()){return new Intl.DateTimeFormat('en-CA',{timeZone:Intl.DateTimeFormat().resolvedOptions().timeZone,year:'numeric',month:'2-digit',day:'2-digit'}).format(d)}
+function day(){const k=localDate();if(!db.days[k])db.days[k]={meals:structuredClone(baseMeals),steps:0,water:0,sleep:0,mobility:0,workoutDone:false,adherence:0,notes:'',scores:{}};return db.days[k]}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function totals(d=day()){return d.meals.filter(m=>m.status==='eaten'||m.status==='modified').reduce((a,m)=>({kcal:a.kcal+(+m.kcal||0),protein:a.protein+(+m.protein||0)}),{kcal:0,protein:0})}
+function renderMeals(){const d=day();document.getElementById('meals').innerHTML=d.meals.map((m,i)=>`<div class="meal"><div class="row"><div><h3>${esc(m.name)}</h3><div class="ingredients">${esc(m.ingredients)}</div><span class="muted">${m.kcal} kcal · ${m.protein} g proteína</span></div><select class="status" onchange="mealStatus(${i},this.value)"><option value="pending" ${m.status==='pending'?'selected':''}>Pendiente</option><option value="eaten" ${m.status==='eaten'?'selected':''}>Consumida</option><option value="modified" ${m.status==='modified'?'selected':''}>Modificada</option></select></div>${m.status==='modified'?`<div class="grid2"><div><label>Kcal reales</label><input type="number" value="${m.kcal}" onchange="mealEdit(${i},'kcal',this.value)"></div><div><label>Proteína real</label><input type="number" value="${m.protein}" onchange="mealEdit(${i},'protein',this.value)"></div></div>`:''}</div>`).join('');renderBalance()}
+function mealStatus(i,v){day().meals[i].status=v;persist();renderMeals()} function mealEdit(i,k,v){day().meals[i][k]=+v;persist();renderBalance()}
+function addMeal(){const name=prompt('Nombre de la comida');if(!name)return;const kcal=+prompt('Calorías aproximadas')||0,protein=+prompt('Proteína aproximada (g)')||0;day().meals.push({name,ingredients:'Comida personalizada',kcal,protein,status:'eaten'});persist();renderMeals()}
+function renderBalance(){const d=day(),t=totals(d),diff=GOAL-t.kcal,p=document.getElementById('kcalPill');kcalNow.textContent=Math.round(t.kcal);proteinNow.textContent=Math.round(t.protein)+' g';waterNow.textContent=(+d.water||0)+' L';stepsNow.textContent=(+d.steps||0).toLocaleString();kcalBar.style.width=Math.min(100,t.kcal/GOAL*100)+'%';remaining.textContent=diff>=0?`Faltan ${Math.round(diff)} kcal y ${Math.max(0,P_MIN-Math.round(t.protein))} g de proteína.`:`Excedes la meta por ${Math.abs(Math.round(diff))} kcal.`;p.className='pill '+(t.kcal>=1500&&t.kcal<=1720&&t.protein>=P_MIN&&t.protein<=P_MAX?'green':t.kcal>1720?'red':'orange');p.textContent=t.kcal===0?'Pendiente':p.classList.contains('green')?'En rango':p.classList.contains('red')?'Fuera de rango':'En proceso'}
+function renderScores(){const names={energy:'Energía',hunger:'Hambre',stress:'Estrés',recovery:'Recuperación'},d=day();selectedScores={...selectedScores,...d.scores};scores.innerHTML=Object.entries(names).map(([k,n])=>`<label>${n}</label><div class="score">${[1,2,3,4,5].map(v=>`<button class="${selectedScores[k]===v?'on':''}" onclick="setScore('${k}',${v})">${v}</button>`).join('')}</div>`).join('')}
+function setScore(k,v){selectedScores[k]=v;renderScores()}
+function fillToday(){const d=day();steps.value=d.steps||'';water.value=d.water||'';sleep.value=d.sleep||'';mobility.value=d.mobility||'';workoutDone.checked=!!d.workoutDone;adherence.value=d.adherence||'';notes.value=d.notes||'';renderMeals();renderScores()}
+function saveToday(){const d=day();Object.assign(d,{steps:+steps.value||0,water:+water.value||0,sleep:+sleep.value||0,mobility:+mobility.value||0,workoutDone:workoutDone.checked,adherence:+adherence.value||0,notes:notes.value,scores:{...selectedScores}});persist();renderBalance();alert('Día guardado')}
+function saveMeasure(){if(!+weight.value&&!+waist.value)return alert('Agrega al menos peso o cintura');db.measures.push({date:measureDate.value||localDate(),weight:+weight.value||null,waist:+waist.value||null,fat:+fat.value||null,lean:+lean.value||null});db.measures.sort((a,b)=>a.date.localeCompare(b.date));persist();['weight','waist','fat','lean'].forEach(x=>document.getElementById(x).value='');renderProgress()}
+function renderProgress(){const list=db.measures.slice(-10),weights=list.filter(x=>x.weight),min=Math.min(...weights.map(x=>x.weight),0),max=Math.max(...weights.map(x=>x.weight),1);weightChart.innerHTML=weights.length?weights.map(x=>`<div class="bar" title="${x.weight} kg" style="height:${30+70*(x.weight-min)/(max-min||1)}%"><span>${x.date.slice(5)}</span></div>`).join(''):'<div class="empty">Registra tu primera medición.</div>';const last7=weights.slice(-7),avg=last7.reduce((a,x)=>a+x.weight,0)/(last7.length||1);avgWeight.textContent=weights.length?`Promedio ${avg.toFixed(1)} kg`:'Sin datos';measureHistory.innerHTML=list.length?[...list].reverse().map(x=>`<div class="meal row"><div><h3>${x.date}</h3><div class="muted">${x.weight?x.weight+' kg':''} ${x.waist?'· '+x.waist+' cm cintura':''} ${x.fat?'· '+x.fat+'% grasa':''}</div></div><button class="btn danger" onclick="deleteMeasure('${x.date}')">×</button></div>`).join(''):'<div class="empty">Todavía no hay mediciones.</div>'}
+function deleteMeasure(date){if(confirm('¿Eliminar esta medición?')){const i=db.measures.map(x=>x.date).lastIndexOf(date);db.measures.splice(i,1);persist();renderProgress()}}
+function renderWorkout(){const r=routine.value,prev=[...db.workouts].reverse().find(w=>w.routine===r);workout.innerHTML=routineDefs[r].map((e,i)=>{const old=prev?.exercises?.find(x=>x.name===e);return`<div class="exercise"><div class="row"><h3>${e}</h3><span class="muted">${old?'Anterior: '+old.sets.map(s=>s.weight+'×'+s.reps).join(', '):'Sin historial'}</span></div>${[1,2,3].map((_,j)=>`<div class="series"><small>${j+1}</small><input data-e="${i}" data-s="${j}" data-k="weight" type="number" step=".5" placeholder="kg"><input data-e="${i}" data-s="${j}" data-k="reps" type="number" placeholder="reps"><input data-e="${i}" data-s="${j}" data-k="rir" type="number" min="0" max="5" placeholder="RIR"></div>`).join('')}</div>`}).join('')}
+function saveWorkout(){const r=routine.value,exercises=routineDefs[r].map((name,i)=>({name,sets:[0,1,2].map(j=>{const q=k=>document.querySelector(`[data-e="${i}"][data-s="${j}"][data-k="${k}"]`).value;return{weight:+q('weight')||0,reps:+q('reps')||0,rir:+q('rir')||0}}).filter(s=>s.weight||s.reps)})).filter(e=>e.sets.length);if(!exercises.length)return alert('Registra al menos una serie');db.workouts.push({date:localDate(),routine:r,exercises});day().workoutDone=true;persist();renderWorkout();renderWorkoutHistory();alert('Sesión guardada')}
+function renderWorkoutHistory(){workoutHistory.innerHTML=db.workouts.length?[...db.workouts].reverse().slice(0,5).map(w=>`<div class="meal"><h3>${w.routine} · ${w.date}</h3><div class="ingredients">${w.exercises.length} ejercicios · ${w.exercises.reduce((a,e)=>a+e.sets.length,0)} series</div></div>`).join(''):'<div class="empty">Todavía no hay sesiones.</div>'}
+function lastDates(n=7){return Array.from({length:n},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(n-1-i));return localDate(d)})}
+function renderWeek(){const dates=lastDates(),days=dates.map(k=>db.days[k]).filter(Boolean),avg=(fn)=>days.length?days.reduce((a,d)=>a+fn(d),0)/days.length:0;const kcal=avg(d=>totals(d).kcal),protein=avg(d=>totals(d).protein),adh=avg(d=>+d.adherence||0),sl=avg(d=>+d.sleep||0),st=avg(d=>+d.steps||0),sessions=days.filter(d=>d.workoutDone).length;weekDates.textContent=`${dates[0].slice(5)}—${dates[6].slice(5)}`;weekMetrics.innerHTML=[['Kcal prom.',Math.round(kcal)],['Proteína',Math.round(protein)+' g'],['Adherencia',Math.round(adh)+'%'],['Fuerza',sessions+' sesiones'],['Pasos',Math.round(st).toLocaleString()],['Sueño',sl.toFixed(1)+' h']].map(x=>`<div class="metric"><b>${x[1]}</b><small>${x[0]}</small></div>`).join('');let advice=days.length<4?'Registra al menos cuatro días para obtener una lectura útil.':adh<80?'La prioridad no es bajar más calorías: primero recupera una adherencia mínima de 80%.':sl<7?'El sueño está por debajo de 7 horas; protege recuperación antes de aumentar volumen.':sessions<2?'Falta alcanzar la base mínima de dos sesiones de fuerza.':kcal<1450?'El promedio es demasiado bajo frente a la meta de 1,610 kcal. Evita convertir el déficit en restricción extrema.':'La semana está dentro de una ejecución razonable. Mantén el plan y evalúa peso y cintura durante 2–3 semanas antes de ajustar calorías.';weekAdvice.textContent=advice;backupStatus.textContent=db.lastBackup?`Último respaldo: ${db.lastBackup}`:'Aún no has creado un respaldo.'}
+function exportData(){db.lastBackup=localDate();persist();const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`transformacion-2026-${localDate()}.json`;a.click();URL.revokeObjectURL(a.href);renderWeek()}
+function importData(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(x.version!==2||!x.days)throw Error();if(confirm('Esto reemplazará los datos actuales. ¿Continuar?')){db=x;persist();location.reload()}}catch(e){alert('El archivo no es un respaldo válido de la V2')}};r.readAsText(f)}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab,.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active');if(b.dataset.page==='progressPage')renderProgress();if(b.dataset.page==='trainingPage'){renderWorkout();renderWorkoutHistory()}if(b.dataset.page==='weekPage')renderWeek()});
+const now=new Date(),hour=now.getHours();hello.textContent=(hour<12?'Buenos días':hour<19?'Buenas tardes':'Buenas noches')+', Ángel';todayLabel.textContent=new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);measureDate.value=localDate();fillToday();renderProgress();renderWorkout();renderWorkoutHistory();if('serviceWorker'in navigator)navigator.serviceWorker.register('service-worker.js');
+</script>
+</body>
+</html>
